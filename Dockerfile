@@ -1,8 +1,14 @@
+  GNU nano 6.2                                                                                                                         Dockerfile                                                                                                                                   
 # syntax = docker/dockerfile:1.2
 FROM rust:1.81.0 as base
 RUN cargo install cargo-chef@0.1.62 --locked
 RUN rustup component add rustfmt
 RUN apt-get update && apt-get install -y clang cmake ssh
+
+RUN apt-get update && apt-get install -y \
+    protobuf-compiler \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 FROM base AS plan
@@ -26,3 +32,4 @@ COPY openssl-legacy.cnf /etc/ssl/openssl-legacy.cnf
 
 ENV OPENSSL_CONF=/etc/ssl/openssl-legacy.cnf
 CMD lite-rpc
+
